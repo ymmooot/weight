@@ -1,12 +1,12 @@
 import { Auth, google } from "googleapis";
 import { handleAuthRedirect } from "./authServer";
-import { restoreToken } from "./store";
+import { restoreToken } from "./token";
 
 // if you changed the scopes, you have to clear store/token.json
 const SCOPES = ["https://www.googleapis.com/auth/fitness.body.read"];
 
 export const getAuthClient = async (): Promise<Auth.OAuth2Client> => {
-  let oAuth2Client = new google.auth.OAuth2({
+  const oAuth2Client = new google.auth.OAuth2({
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: "http://localhost:3000/oauth2callback",

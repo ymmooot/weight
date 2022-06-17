@@ -1,7 +1,7 @@
 import { Auth } from "googleapis";
 import { createServer } from "http";
 import open from "open";
-import { storeToken } from "./store";
+import { storeToken } from "./token";
 
 export const handleAuthRedirect = (
   authorizeUrl: string,
@@ -9,11 +9,14 @@ export const handleAuthRedirect = (
 ) =>
   new Promise<void>((resolve) => {
     const server = createServer(async (req, res) => {
-      if (!req.url.startsWith("/oauth2callback")) {
+      if (!req.url?.startsWith("/oauth2callback")) {
         return;
       }
       const url = new URL(req.url, "https://hoge.com");
       const code = url.searchParams.get("code");
+      if (!code) {
+        return;
+      }
       console.log(`Code is ${code}`);
       res.end("Authentication successful! Please return to the console.");
       server.close();
