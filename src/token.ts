@@ -1,11 +1,9 @@
-import { promises as fs } from "fs";
-import { Auth } from "googleapis";
+import { promises as fs } from 'fs';
+import { Auth } from 'googleapis';
 
-const TOKEN_STORE_PATH = "store/token.json";
+const TOKEN_STORE_PATH = 'store/token.json';
 
-export const restoreToken = async (
-  oAuth2Client: Auth.OAuth2Client
-): Promise<boolean> => {
+export const restoreToken = async (oAuth2Client: Auth.OAuth2Client): Promise<boolean> => {
   try {
     const token = await fs.readFile(TOKEN_STORE_PATH);
     if (!token) {

@@ -1,6 +1,6 @@
-import { Auth, google, fitness_v1 } from "googleapis";
-import { GaxiosResponse } from "googleapis-common";
-import { promises as fs } from "fs";
+import { Auth, google, fitness_v1 } from 'googleapis';
+import { GaxiosResponse } from 'googleapis-common';
+import { promises as fs } from 'fs';
 
 export type Weight = WeightStore & { diff: number };
 
@@ -9,7 +9,7 @@ type WeightStore = {
   time: number;
 };
 
-const STORE_PATH = "store/weight.json";
+const STORE_PATH = 'store/weight.json';
 
 const restoreWeight = async (): Promise<WeightStore | null> => {
   try {
@@ -26,11 +26,11 @@ const round = (num: number): number => Math.round(num * 100) / 100;
 
 export const fetchLastWeight = async (
   oauth2Client: Auth.OAuth2Client,
-  _year?: string
+  _year?: string,
 ): Promise<Weight | null> => {
   const year = _year ?? new Date().getFullYear();
   const fitnessApi: fitness_v1.Fitness = google.fitness({
-    version: "v1",
+    version: 'v1',
     auth: oauth2Client,
   });
 
@@ -39,9 +39,8 @@ export const fetchLastWeight = async (
 
   const { data }: GaxiosResponse<fitness_v1.Schema$Dataset> =
     await fitnessApi.users.dataSources.datasets.get({
-      dataSourceId:
-        "raw:com.google.weight:com.xiaomi.hm.health:GoogleFitSyncHelper - weight",
-      userId: "me",
+      dataSourceId: 'raw:com.google.weight:com.xiaomi.hm.health:GoogleFitSyncHelper - weight',
+      userId: 'me',
       datasetId: `${from}-${to}`,
     });
 
@@ -59,6 +58,6 @@ export const fetchLastWeight = async (
   await storeWeight(weight);
   return {
     ...weight,
-    diff: round(storedWeight ? storedWeight?.value - lastWeightKG : 0),
+    diff: round(storedWeight ? lastWeightKG - storedWeight?.value : 0),
   };
 };
