@@ -2,25 +2,16 @@ import { Auth, google, fitness_v1 } from "googleapis";
 import { GaxiosResponse } from "googleapis-common";
 import { promises as fs } from "fs";
 
-// const getDataSources = async (client: Auth.OAuth2Client) => {
-//   const fitnessApi: fitness_v1.Fitness = google.fitness({
-//     version: "v1",
-//     auth: client,
-//   });
-//   const { data } = await fitnessApi.users.dataSources.list({
-//     userId: "me",
-//   });
-//   console.log(JSON.stringify(data));
-// };
+export type Weight = WeightStore & { diff: number };
 
-type Weight = {
+type WeightStore = {
   value: number;
-  time: number; // timestamp;
+  time: number;
 };
 
 const STORE_PATH = "store/weight.json";
 
-const restoreWeight = async (): Promise<Weight | null> => {
+const restoreWeight = async (): Promise<WeightStore | null> => {
   try {
     const file = await fs.readFile(STORE_PATH);
     return JSON.parse(file.toString());
@@ -29,9 +20,9 @@ const restoreWeight = async (): Promise<Weight | null> => {
   }
 };
 
-const storeWeight = async (weight: Weight): Promise<void> => {
-  return fs.writeFile(STORE_PATH, JSON.stringify(weight));
-};
+const storeWeight = async (weight: WeightStore): Promise<void> =>
+  fs.writeFile(STORE_PATH, JSON.stringify(weight));
+const round = (num: number): number => Math.round(num * 100) / 100;
 
 export const fetchLastWeight = async (
   oauth2Client: Auth.OAuth2Client,
@@ -55,9 +46,9 @@ export const fetchLastWeight = async (
     });
 
   const lastWeightPoint = data.point![data.point!.length - 1];
-  const lastWeightKG = lastWeightPoint.value![0].fpVal!;
+  const lastWeightKG = round(lastWeightPoint.value![0].fpVal!);
   const weight = {
-    value: Math.floor(lastWeightKG * 10) / 10,
+    value: lastWeightKG,
     time: parseInt(lastWeightPoint.startTimeNanos!, 10) / 1e6,
   };
 
@@ -65,7 +56,9 @@ export const fetchLastWeight = async (
   if (storedWeight && storedWeight.time === weight.time) {
     return null;
   }
-
   await storeWeight(weight);
-  return weight;
+  return {
+    ...weight,
+    diff: round(storedWeight ? storedWeight?.value - lastWeightKG : 0),
+  };
 };
