@@ -1,6 +1,6 @@
 # Weight
 
-Get a body weight from Google Fit and send it to Discord.
+Get body weight from Google Fit and send it to Discord.
 
 ## Environment Variables
 
