@@ -9,7 +9,7 @@
   "author": "Ryota Yamamoto",
   "license": "ISC",
   "dependencies": {
-    "date-fns": "^2.29.1",
+    "date-fns": "^2.29.2",
     "googleapis": "^105.0.0",
     "node-fetch": "^2.6.7",
     "open": "^8.4.0",
