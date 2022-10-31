@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "date-fns": "^2.29.3",
-    "googleapis": "^108.0.0",
+    "googleapis": "^109.0.0",
     "node-fetch": "^2.6.7",
     "open": "^8.4.0",
     "readline-promise": "^1.0.5"
