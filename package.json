@@ -12,7 +12,7 @@
     "date-fns": "^2.29.3",
     "googleapis": "^110.0.0",
     "node-fetch": "^2.6.7",
-    "open": "^8.4.0",
+    "open": "^8.4.2",
     "readline-promise": "^1.0.5"
   },
   "devDependencies": {
